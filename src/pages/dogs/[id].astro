@@ -1,0 +1,90 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { httpClient, api } from "../../lib/convex";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+
+const dog = await httpClient.query(api.dogs.get, { id: id });
+
+console.log(dog);
+---
+
+<Layout>
+  <Fragment slot="header">Dogs for Adoption</Fragment>
+
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="product mb-0">
+            <div class="product-thumb-info border-0 mb-0">
+              <!-- <div class="product-thumb-info-badges-wrapper">
+                <span class="badge badge-ecommerce text-bg-success">NEW</span>
+              </div> -->
+
+              <!-- <div class="addtocart-btn-wrapper">
+                <a
+                  href="shop-cart.html"
+                  class="text-decoration-none addtocart-btn"
+                  title="Add to Cart"
+                >
+                  <i class="icons icon-bag"></i>
+                </a>
+              </div> -->
+
+              <!-- <a href="shop-product-sidebar-left.html"> -->
+              <div class="product-thumb-info-image">
+                <img
+                  alt=""
+                  class="img-fluid"
+                  src="../img/products/product-grey-1.jpg"
+                />
+              </div>
+              <!-- </a> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="summary entry-summary position-relative">
+            <h1 class="mb-0 font-weight-semibold text-7">{dog.name}</h1>
+
+            <div class="divider divider-small">
+              <hr class="bg-color-grey-400" />
+            </div>
+
+            {
+              dog.gender == "Male" ? (
+                <i class="fa-solid fa-mars" />
+              ) : (
+                <i class="fa-solid fa-venus" />
+              )
+            }
+            <!-- <span class="sale text-color-dark font-weight-semi-bold">
+              {dog.gender}
+            </span> -->
+            {dog.gender}
+            <br />
+            <i class="fa-solid fa-cake-candles"></i> Estimated Age:
+            <br />
+            <i class="fa-solid fa-house"></i> HDB Approved: {dog.hdbApproved}
+
+            <!-- <ul class="list list-unstyled text-2">
+              <li class="mb-0">
+                AVAILABILITY: <strong class="text-color-dark">AVAILABLE</strong>
+              </li>
+              <li class="mb-0">
+                SKU: <strong class="text-color-dark">1234567890</strong>
+              </li>
+            </ul> -->
+            <br /><br />
+            {dog.description}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3"></div>
+  </div>
+</Layout>

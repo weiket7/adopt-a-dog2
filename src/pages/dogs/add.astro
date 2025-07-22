@@ -1,0 +1,76 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { httpClient, api } from "../../lib/convex";
+
+//Content-Type was not one of "multipart/form-data" or "application/x-www-form-urlencoded"
+export const prerender = false; 
+
+console.log(Astro.request.method)
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    console.log(data);
+
+    const name = data.get("name");
+    const gender = data.get("gender");
+
+    const dog = await httpClient.mutation(api.dogs.add, { name, gender });
+    console.log(dog);
+    // Do something with the data
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+
+<Layout>
+    <script is:inline>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#birthday", {});
+        });
+    </script>
+  
+    <Fragment slot="header">Add Dog</Fragment>
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Name</label>
+            <input type="text" class="form-control" name="name">
+        </div>
+        
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="gender-male" value="Male">
+                <label class="form-check-label" for="gender-male">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="gender-female" value="Female">
+                <label class="form-check-label" for="gender-female">Female</label>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="gender" class="form-label">Birthday</label>
+            <input id="birthday" class="form-control" name="birthday"></div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="gender" class="form-label">HDB Approved</label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="hdb-approved" id="hdb-approved-yes" value="Male">
+                <label class="form-check-label" for="hdb-approved-yes">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="hdb-approved" id="hdb-approved-no" value="Female">
+                <label class="form-check-label" for="hdb-approved-no">No</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</Layout>
